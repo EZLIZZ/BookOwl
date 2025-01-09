@@ -7,7 +7,11 @@ import { useEffect, useState } from "react";
 import $axios from "../../../lib/axios.instance.js";
 import Link from "next/link.js";
 
+
+
+
 export default function Books() {
+
   const [data, setData] = useState([]);
   useEffect(() => {
     getData();
@@ -25,6 +29,7 @@ export default function Books() {
     // setErrorMap(err.message);
     // }
   };
+ 
   return (
     <div className="w-full  h-full  bg-[#fcf3ec]  ">
       <div className=" bg-[#fcf3ec]  h-[90px]  flex justify-between mx-3 px-3 items-center border-b-2 border-gray-500  ">

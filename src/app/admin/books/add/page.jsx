@@ -16,17 +16,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Select from "react-tailwindcss-select";
 import $axios from "@/lib/axios.instance";
-// import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   bookName: z.string().min(1, "Book Name is required"),
-  author: z.object({name: z.string().min(1, "Author's Name is required"),
-  bio: z.string(),}),
+  author: z.object({name: z.string().min(1, "Author's Name is required")}),
   bookSummary: z.string(),
   price: z.preprocess((value) => parseFloat(value), z.number().positive({ message: "Price must be a positive number." })),
   pages: z.preprocess((value) => parseFloat(value), z.number().positive({ message: "Pages must be a positive number." })),
   publishedDate: z.preprocess((val) => (typeof val === "string" ? new Date(val) : val),z.date()),
-  genre: z.array(z.string()),
+  category:z.array(z.string()),
   language: z.string(),
   rating: z.preprocess((value) => parseFloat(value), z.number() .min(1, { message: "Rating must be at least 1." }).max(5, { message: "Rating cannot exceed 5." })),
   ISBN: z.preprocess((value) => parseFloat(value), z.number().positive({ message: "Pages must be a positive number." })),
@@ -34,20 +33,32 @@ const formSchema = z.object({
   mood: z.array(z.string()),
 //   customTags: z.array(z.string()),
   stocks: z.preprocess((value) => parseFloat(value), z.number().positive({ message: "Pages must be a positive number." })),
-  createdAt: z.preprocess((val) => (typeof val === "string" ? new Date(val) : val),z.date()),
 });
 export default function AddBooks() {
+   const [data, setData] = useState([]);
+    useEffect(() => {
+      getCategory();
+    }, []);
+
+  const getCategory = async () => {
+    const CategoryResponse = await $axios.get("/category/getCategory");
+    console.log(CategoryResponse);
+    if (!CategoryResponse){
+      throw new Error(`HTTP erroe!:Status: ${CategoryResponse.status}`)
+    }
+    setData(CategoryResponse?.data.data);
+  };
+  
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       bookName: "",
-     author: { name: "",
-      bio: "",},
+     author: {name : ""} ,
       bookSummary: "",
       price: 1,
       pages: 1, 
       publishedDate: "",
-      genre: [],
+      category: [],
       rating: "",
       ISBN: 1,
       language: "",
@@ -55,14 +66,13 @@ export default function AddBooks() {
       mood: [],
     //   customTags: [],
       stocks: 1,
-      createdAt: "",
     },
   });
-  const options = [
-    { value: "friction", label: "friction"},
-    { value: "adventure", label: "adventure"},
-    { value: "romance", label: "romance"},
-];
+  const options = data.map((CategoryItems)=>({
+    value :CategoryItems._id,
+    label :CategoryItems.categoryName,
+
+}))
 const moodoptions = [
   { value: "happy", label: "happy"},
   { value: "sad", label: "sad"},
@@ -149,14 +159,14 @@ const moodoptions = [
         
               <FormField
           control={form.control}
-          name="genre"
+          name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Genre</FormLabel>
+              <FormLabel>category</FormLabel>
               <FormControl>
                 <Select
-                  isMultiple
-                  placeholder="Select genre" 
+                isMultiple
+                  placeholder="Select category" 
                   value={options.filter((option) =>
                     field.value.includes(option.value)
                   )}
@@ -176,7 +186,7 @@ const moodoptions = [
         />
 
           
-          <FormField
+          {/* <FormField
             control={form.control}
             name="author.bio"
             render={({ field }) => (
@@ -188,7 +198,7 @@ const moodoptions = [
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           {/* Book Summary */}
           <FormField
             control={form.control}
@@ -331,25 +341,7 @@ const moodoptions = [
               </FormItem>
             )}
           />
-            <FormField
-            control={form.control}
-            name="createdAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Created Date</FormLabel>
-                <FormControl>
-                  <Input
-                    type="date"
-                    placeholder="Enter Date"
-                    {...field}
-                  />
-
-
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          
 
           <Button type="submit">Submit</Button>
         </form>

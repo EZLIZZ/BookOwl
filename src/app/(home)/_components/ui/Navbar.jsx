@@ -17,7 +17,7 @@ import { useState } from "react";
 // ];
 const navDarkItems = [
   {
-    id: 4,
+    id: 1,
     name: "Browse",
     href: "/",
   },
@@ -49,11 +49,11 @@ export default function Navbar() {
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>
-          <Button
+          <Button asChild
             variant="outline"
             className="flex text-white ml-16 bg-transparent"
           >
-            Login
+          <Link href="/login">Login</Link>  
           </Button>
         </NavigationMenu>
       </div>
@@ -104,11 +104,11 @@ function MobileNav() {
 
             </NavigationMenuList>
             {/* <Link href="/login"></Link> */}
-            <Button
+            <Button asChild
             variant="outline"
             className=" text-white mt-5 bg-transparent "
           >
-            Login
+          <Link href="/login">Login</Link>  
           </Button>
           </NavigationMenu>
         </div>

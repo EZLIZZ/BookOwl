@@ -1,5 +1,4 @@
 "use client";
-import Head from 'next/head';
 import React from 'react';
 import {
     NavigationMenu,
@@ -28,7 +27,7 @@ import {
         </div>
   
         <NavigationMenu className="text-[#5d768a] gap-10 px-[5%] mr-52">
-          <NavigationMenuList className="flex  gap-24 hover:underline ">
+          <NavigationMenuList className="flex  gap-24 ">
             {navItems.map((item) => (
               <NavigationMenuItem key={item.id}>
                 <a href={item.href}>{item.name}</a>
