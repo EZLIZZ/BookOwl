@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,6 +16,7 @@ import { useState } from "react";
 
 export default function BookList({ data }) {
   const [searchBook, setSearchBook] = useState("");
+  // const [editingBook,setEditingBook ] = useState(null);
   const filterdata = data.filter(
     (book) =>
       book.bookName.toLowerCase().includes(searchBook.toLowerCase()) 
@@ -22,6 +24,13 @@ export default function BookList({ data }) {
   );
   // const baseUrl = "http://localhost:5000/";
 // console.log(data.author);
+const handleEditClick = (book) => {
+  setEditingBook(book);
+};
+
+// const handleEditClose = () => {
+//   setEditingCategory(null);
+// };
   return (
     <div>
       <div className="w-full flex justify-end">
@@ -75,14 +84,28 @@ export default function BookList({ data }) {
                 <TableCell>{data.stock}</TableCell>
                 <TableCell>
                   <div className="flex flex-row gap-3">
-                    <Pencil className="w-5 h-5" /> <Trash className="w-5 h-5" />
-                  </div>{" "}
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleEditClick(data)}
+                    >
+                      <Pencil className="w-5 h-5" />
+                    </Button>{" "}
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleDeleteClick(data)}
+                    >
+                      <Trash className="w-5 h-5" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </Card>
+       {/* {editingBook && (
+              <UpdateCategory category={editingCategory} onClose={handleEditClose} />
+            )} */}
     </div>
   );
 }
