@@ -1,28 +1,39 @@
-"use client"
+"use client";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+// import $axios from "@/lib/axios.instance";
 import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 
-export default function BookList({data}) {
-  const [searchBook,setSearchBook] = useState("");
-  const filterdata = data.filter((book)=>
-  book.bookName.toLowerCase().includes(searchBook.toLowerCase())||
-book.author.name.toLowerCase().includes(searchBook.toLowerCase()));
+export default function BookList({ data }) {
+  const [searchBook, setSearchBook] = useState("");
+  const filterdata = data.filter(
+    (book) =>
+      book.bookName.toLowerCase().includes(searchBook.toLowerCase()) 
+      // book.author.name.toLowerCase().includes(searchBook.toLowerCase())
+  );
+  // const baseUrl = "http://localhost:5000/";
+// console.log(data.author);
   return (
     <div>
       <div className="w-full flex justify-end">
-      <Input
-        type="text"
-        placeholder="Search for book or author"
-        value={searchBook}
-        onChange={(e)=> setSearchBook(e.target.value)}
-        className="mt-5 mx-5 lg:w-[15%] w-full border-primary"
+        <Input
+          type="text"
+          placeholder="Search for book or author"
+          value={searchBook}
+          onChange={(e) => setSearchBook(e.target.value)}
+          className="mt-5 mx-5 lg:w-[15%] w-full border-primary"
         />
-        </div>
+      </div>
       <Card className="m-5 px-5 bg-transparent ">
-        
         <Table>
           <TableHeader>
             <TableRow>
@@ -36,17 +47,37 @@ book.author.name.toLowerCase().includes(searchBook.toLowerCase()));
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filterdata.map((data)=>(
+            {filterdata.map((data) => (
               <TableRow key={data.ISBN}>
-                <TableCell><div className="rounded-lg w-16 h-24 overflow-hidden"><img src={data.coverImage} className="w-full h-full object-contain" /></div></TableCell>
-                <TableCell><h1 className="font-semibold text-base text-primary">{data.bookName}</h1> {data.author.name}</TableCell>
+                <TableCell>
+                  <div className="rounded-lg w-16 h-24 overflow-hidden">
+                    <img
+                      src={
+                        data.coverImage.replace(/\\/g, "/")
+                          // : "/images/default-cover.jpg"
+                      }
+                      alt="Cover Image"
+                      className="w-full h-full object-contain"
+                    />
+                    ;
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <h1 className="font-semibold text-base text-primary">
+                    {data.bookName}
+                  </h1>
+                  {data.author.authorName}
+                </TableCell>
                 <TableCell>{data.bookSummary}</TableCell>
                 <TableCell>{data.language}</TableCell>
                 <TableCell>{data.price}</TableCell>
 
                 <TableCell>{data.stock}</TableCell>
-                <TableCell><div className="flex flex-row gap-3"><Pencil className="w-5 h-5"/> <Trash className="w-5 h-5"/></div> </TableCell>
-
+                <TableCell>
+                  <div className="flex flex-row gap-3">
+                    <Pencil className="w-5 h-5" /> <Trash className="w-5 h-5" />
+                  </div>{" "}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
